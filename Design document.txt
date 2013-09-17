@@ -1,0 +1,31 @@
+Design Document:
+
+This game makes use of 2 core mechanics: Movement and checking the conditions of bullets and ships and enemies
+
+Everything is stored within a "stage" class, which imports from DirectObject, a built-in object provided by
+Panda3d, which contains Getx/gety/getz and getvelocity features included as instances.
+
+the first mechanic uses sine and cosine to turn the ship and enemies to face each other, based on the deltaY and
+deltaX values, (the change in X and Y between the ships positions). I then change that into a unit vector, and
+then normalize it by multiplying it by a certain rate that i set for the ship as "turnrate". This way the turn rate
+of the ship is always the same.
+
+The movement works in a more simplistic manner. Use sine and cosine of the ship's angle, (stored in an instance of the
+Class variable "Stage") to find the y and x directions of the ship's velocity, and move the ship by multiplying it
+again by the ship's velocity. 
+
+Bullets work in the same manner as ships, except once set in a velocity, the velocity does not change.
+
+everytime a bullet is fired, i append the bullet to their respective lists of lasers or discs.
+
+for each call to timerfired, which repeats at 0.003 milliseconds, i check the condition of the laser with respect
+to the position of all enemy ships and the player's ships, and if the center of the laser is within the position
+set around the ship, i remove them and either destroy the enemy ship, or reduce health by 1. The timer fired loops
+through every single laser and disc every time it's called. 
+
+the timer fired is also in charge of moving objects based on its velocity, by having an instance called "dt", or 
+simply delta time, the change in time between each time timerfired is called, (approx 0.003 millisec), and multiplies
+that with the velocity to find change in distance. it then adds the chance in distance to the original position, and calls
+check legal position of the ship to check if the new position is legal. if it is, then we change the position,
+or if not, we change the position back. this works like we learned in tetris. this movement style makes use of
+the equation delta(x) = delta(t)*dx
